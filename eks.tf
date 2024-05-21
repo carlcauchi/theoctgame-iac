@@ -11,6 +11,8 @@ module "eks" {
   create_cloudwatch_log_group = false
   cluster_encryption_config   = {}
 
+  enable_cluster_creator_admin_permissions = true
+
   cluster_addons = {
     coredns = {
       most_recent = true
