@@ -62,9 +62,17 @@
 #  }
 #}
 
+resource "null_resource" "update_kubeconfig" {
+  provisioner "local-exec" {
+    command = "aws eks --region ${data.aws_region.current.name} update-kubeconfig --name ${var.cluster_name}"
+  }
+  depends_on = [module.eks]
+}
+
 module "eks_aws-load-balancer-controller" {
   source  = "akw-devsecops/eks/aws//modules/aws-load-balancer-controller"
   version = "2.6.11"
   cluster_name = var.cluster_name
   oidc_provider_arn =  module.eks.oidc_provider_arn
+  depends_on = [null_resource.update_kubeconfig]
 }
